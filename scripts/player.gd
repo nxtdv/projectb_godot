@@ -2,8 +2,8 @@ extends CharacterBody2D
 
 @onready var sprite_2d: Sprite2D = $Sprite2D
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
-const WALK_SPEED: float                        = 100.0
-const SPRINT_SPEED: float                      = 300.0
+const WALK_SPEED: float   = 100.0
+const SPRINT_SPEED: float = 300.0
 
 
 func _physics_process(_delta: float) -> void:
