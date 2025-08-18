@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://iwxgb3tre0g2"]
+
+[ext_resource type="Texture2D" uid="uid://c4vebliuxwdh7" path="res://assets/Props/Atlas-Props.png" id="1_avsvi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vplca"]
+atlas = ExtResource("1_avsvi")
+region = Rect2(10, 2, 101, 182)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_viusy"]
+size = Vector2(10, 11.25)
+
+[node name="tree_1" type="StaticBody2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -91)
+texture = SubResource("AtlasTexture_vplca")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-10, -21)
+shape = SubResource("RectangleShape2D_viusy")
