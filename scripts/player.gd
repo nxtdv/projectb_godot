@@ -8,7 +8,8 @@ var is_attacking: bool                         = false
 
 
 func _ready() -> void:
-	animation_player.animation_finished.connect(_on_animation_player_animation_finished)
+	if not animation_player.animation_finished.is_connected(_on_animation_player_animation_finished):
+		animation_player.animation_finished.connect(_on_animation_player_animation_finished)
 
 
 func _physics_process(_delta: float) -> void:
