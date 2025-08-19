@@ -242,6 +242,51 @@ shape = SubResource("CapsuleShape2D_3w2wa")
 position = Vector2(4, -22)
 shape = SubResource("CircleShape2D_xr7qm")
 
+[node name="DialogueUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="DialoguePanel" type="Panel" parent="DialogueUI"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 52.0
+offset_top = -189.0
+offset_right = 202.0
+offset_bottom = -39.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DialogueUI/DialoguePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="DialogueLabel" type="Label" parent="DialogueUI/DialoguePanel/VBoxContainer"]
+custom_minimum_size = Vector2(400, 80)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+
+[node name="ContinueLabel" type="Label" parent="DialogueUI/DialoguePanel/VBoxContainer"]
+modulate = Color(0.827451, 0.827451, 0.827451, 1)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "[E] Continuer"
+horizontal_alignment = 2
+
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animation_finished"]
 [connection signal="body_entered" from="InteractionArea" to="." method="_on_interaction_area_body_entered"]
 [connection signal="body_exited" from="InteractionArea" to="." method="_on_interaction_area_body_exited"]
