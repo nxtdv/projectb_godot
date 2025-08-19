@@ -1,10 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://iwxgb3tre0g2"]
 
-[ext_resource type="Texture2D" uid="uid://c4vebliuxwdh7" path="res://assets/Props/Atlas-Props.png" id="1_avsvi"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_vplca"]
-atlas = ExtResource("1_avsvi")
-region = Rect2(10, 2, 101, 182)
+[ext_resource type="Material" uid="uid://b74xeffooabws" path="res://shaders/WindyTreeMaterial.tres" id="1_b2jax"]
+[ext_resource type="Texture2D" uid="uid://bewn02pctqu7i" path="res://assets/Props/big-tree-1.png" id="2_b2jax"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_viusy"]
 size = Vector2(10, 11.25)
@@ -12,9 +9,10 @@ size = Vector2(10, 11.25)
 [node name="tree_1" type="StaticBody2D"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -91)
-texture = SubResource("AtlasTexture_vplca")
+material = ExtResource("1_b2jax")
+position = Vector2(0, -94)
+texture = ExtResource("2_b2jax")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-10, -21)
+position = Vector2(-11, -24)
 shape = SubResource("RectangleShape2D_viusy")
