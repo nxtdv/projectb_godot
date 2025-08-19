@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bewn02pctqu7i" path="res://assets/Props/big-tree-1.png" id="2_b2jax"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_viusy"]
-size = Vector2(10, 11.25)
+size = Vector2(20, 7.625)
 
 [node name="tree_1" type="StaticBody2D"]
 
@@ -14,5 +14,5 @@ position = Vector2(0, -94)
 texture = ExtResource("2_b2jax")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-11, -24)
+position = Vector2(-12, -22.1875)
 shape = SubResource("RectangleShape2D_viusy")
