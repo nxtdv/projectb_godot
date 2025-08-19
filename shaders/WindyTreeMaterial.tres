@@ -1,0 +1,21 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://b74xeffooabws"]
+
+[ext_resource type="Shader" uid="uid://cnovcx2s4pc5s" path="res://shaders/WindyFoliage.gdshader" id="1_kwenc"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_viqml"]
+offset = Vector3(0, 0, 86.25)
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_e700c"]
+seamless = true
+noise = SubResource("FastNoiseLite_viqml")
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_kwenc")
+shader_parameter/render_noise = false
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_e700c")
+shader_parameter/amplitude = 0.1
+shader_parameter/time_scale = 0.04
+shader_parameter/noise_scale = 0.001
+shader_parameter/rotation_strength = 1.0
+shader_parameter/rotation_pivot = Vector2(0.5, 1)
