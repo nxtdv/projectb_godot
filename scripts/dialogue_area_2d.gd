@@ -31,7 +31,7 @@ func _process(_delta: float) -> void:
 			set_process(false)
 			return
 
-		if Input.is_action_just_pressed("ui_accept"):
+		if Input.is_action_just_pressed("Interact"):
 			_activate_dialogue()
 			player_body_in = false
 
