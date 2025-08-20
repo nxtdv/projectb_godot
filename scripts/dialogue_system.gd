@@ -1,6 +1,6 @@
 extends Node2D
 
-const DialogueButtonPreload = preload("res://scenes/dialogue_button.tscn")
+const DialogueButtonPreload: PackedScene = preload("res://scenes/dialogue_button.tscn")
 @onready var DialogueLabel: RichTextLabel = $HBoxContainer/VBoxContainer/RichTextLabel
 @onready var SpeakerSprite: Sprite2D = $HBoxContainer/speaker_parent/Sprite2D
 
@@ -30,7 +30,7 @@ func _process(_delta: float) -> void:
 
 	if next_item:
 		next_item = false
-		var i = dialogue[current_dialogue_item]
+		var i: DE = dialogue[current_dialogue_item]
 
 		if i is DialogueFunction:
 			if i.hide_dialogue_box:
@@ -54,7 +54,7 @@ func _process(_delta: float) -> void:
 
 
 func _function_resource(i: DialogueFunction) -> void:
-	var target_node = get_node(i.target_path)
+	var target_node: Node = get_node(i.target_path)
 	if target_node.has_method(i.function_name):
 		if i.function_arguments.size() == 0:
 			target_node.call(i.function_name)
@@ -62,10 +62,10 @@ func _function_resource(i: DialogueFunction) -> void:
 			target_node.callv(i.function_name, i.function_arguments)
 
 	if i.wait_for_signal_to_continue:
-		var signal_name = i.wait_for_signal_to_continue
+		var signal_name: String = i.wait_for_signal_to_continue
 		if target_node.has_signal(signal_name):
-			var signal_state = { "done": false }
-			var callable     = func(_args): signal_state.done = true
+			var signal_state: Dictionary = { "done": false }
+			var callable                 = func(_args): signal_state.done = true
 			target_node.connect(signal_name, callable, CONNECT_ONE_SHOT)
 			while not signal_state.done:
 				await get_tree().process_frame
@@ -82,13 +82,13 @@ func _choice_resource(i: DialogueChoice) -> void:
 		$HBoxContainer/speaker_parent.visible = true
 		SpeakerSprite.texture = i.speaker_img
 		SpeakerSprite.hframes = i.speaker_img_Hframes
-		SpeakerSprite.frame = min(i.speaker_img_select_framesn, i.speaker_img_Hframes - 1)
+		SpeakerSprite.frame = min(i.speaker_img_select_frames, i.speaker_img_Hframes - 1)
 	else:
 		$HBoxContainer/speaker_parent.visible = false
 	$HBoxContainer/VBoxContainer/button_container.visible = true
 
 	for item in i.choice_text.size():
-		var DialogueButtonVar = DialogueButtonPreload.instantiate()
+		var DialogueButtonVar: Node = DialogueButtonPreload.instantiate()
 		DialogueButtonVar.text = i.choice_text[item]
 
 		var function_resource: DialogueFunction = i.choice_function_call[item]
@@ -114,13 +114,11 @@ func _choice_button_pressed(target_node: Node, wait_for_signal_to_continue: Stri
 	for i in $HBoxContainer/VBoxContainer/button_container.get_children():
 		i.queue_free()
 
-	# you can add a button press audiostreamplayer to the dialogue system here
-
 	if wait_for_signal_to_continue:
-		var signal_name = wait_for_signal_to_continue
+		var signal_name: String = wait_for_signal_to_continue
 		if target_node.has_signal(signal_name):
-			var signal_state = { "done": false }
-			var callable     = func(_args): signal_state.done = true
+			var signal_state: Dictionary = { "done": false }
+			var callable                 = func(_args): signal_state.done = true
 			target_node.connect(signal_name, callable, CONNECT_ONE_SHOT)
 			while not signal_state.done:
 				await get_tree().process_frame
@@ -151,6 +149,7 @@ func _text_resource(i: DialogueText) -> void:
 	var text_without_brackets: String = _text_without_square_brackets(i.text)
 	var total_characters: int         = text_without_brackets.length()
 	var character_timer: float        = 0.0
+
 	while DialogueLabel.visible_characters < total_characters:
 		if Input.is_action_just_pressed('ui_cancel'):
 			DialogueLabel.visible_characters = total_characters
@@ -171,7 +170,9 @@ func _text_resource(i: DialogueText) -> void:
 			character_timer = 0.0
 
 		await get_tree().process_frame
+
 	SpeakerSprite.frame = min(i.speaker_img_rest_frames, i.speaker_img_Hframes - 1)
+
 	while true:
 		await get_tree().process_frame
 		if DialogueLabel.visible_characters == total_characters:
@@ -187,12 +188,9 @@ func _text_without_square_brackets(text: String) -> String:
 		if i == "[":
 			in_brackets = true
 			continue
-
 		elif i == "]":
 			in_brackets = false
 			continue
-
 		elif not in_brackets:
 			result += i
-
 	return result
