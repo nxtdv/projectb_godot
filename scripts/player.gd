@@ -5,9 +5,11 @@ extends CharacterBody2D
 const WALK_SPEED: float                        = 100.0
 const SPRINT_SPEED: float                      = 300.0
 var is_attacking: bool                         = false
+var can_move: bool                             = true
 
 
 func _ready() -> void:
+	add_to_group("player")
 	if not animation_player.animation_finished.is_connected(_on_animation_player_animation_finished):
 		animation_player.animation_finished.connect(_on_animation_player_animation_finished)
 
