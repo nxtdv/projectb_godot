@@ -15,6 +15,10 @@ run/main_scene="uid://bu843gxnla8m3"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+UIManager="*res://scripts/ui_manager.gd"
+
 [display]
 
 window/stretch/mode="canvas_items"
@@ -22,6 +26,7 @@ window/stretch/mode="canvas_items"
 [global_group]
 
 player=""
+ui_layer=""
 
 [input]
 
