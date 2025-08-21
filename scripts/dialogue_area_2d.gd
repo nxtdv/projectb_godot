@@ -1,25 +1,28 @@
+## Detects player interaction and displays dialogue.
+## Attach to Area2D nodes to create dialogue trigger zones.
+## Configure dialogue content and positioning options in the inspector.
+
 extends Area2D
 
-const DialogueSystemPreload = preload("res://scenes/dialogue_system.tscn")
 @export var activate_instant: bool
 @export var only_active_once: bool
+@export var dialogue_position: String = "auto"  # "auto", "top", "bottom", "center"
 @export var override_dialogue_position: bool
 @export var override_position: Vector2
 @export var dialogue: Array[DE]
 
-var dialogue_top_pos: Vector2    = Vector2(160, 48)
-var dialogue_bottom_pos: Vector2 = Vector2(160, 192)
 var player_body_in: bool         = false
 var has_activated_already: bool  = false
-var desired_dialogue_position: Vector2
 var player_node: CharacterBody2D = null
 
 
+## Initialize player reference on scene ready
 func _ready() -> void:
 	for i in get_tree().get_nodes_in_group("player"):
 		player_node = i
 
 
+## Handle input detection for dialogue activation
 func _process(_delta: float) -> void:
 	if !player_node:
 		for i in get_tree().get_nodes_in_group("player"):
@@ -36,22 +39,23 @@ func _process(_delta: float) -> void:
 			player_body_in = false
 
 
+## Activate dialogue through UIManager with configured settings
 func _activate_dialogue() -> void:
-	player_node.can_move = false
+	if player_node:
+		player_node.can_move = false
 
-	var new_dialogue = DialogueSystemPreload.instantiate()
-	if override_dialogue_position:
-		desired_dialogue_position = override_position
-	else:
-		if player_node.global_position.y > get_viewport().get_camera_2d().get_screen_center_position().y:
-			desired_dialogue_position = dialogue_top_pos
-		else:
-			desired_dialogue_position = dialogue_bottom_pos
-	new_dialogue.global_position = desired_dialogue_position
-	new_dialogue.dialogue = dialogue
-	get_parent().add_child(new_dialogue)
+	has_activated_already = true
+
+	if not UIManager:
+		push_error("UIManager not found! Please ensure it is set up in the scene tree.")
+		return
+
+	var override_pos: Vector2 = override_position if override_dialogue_position else Vector2.ZERO
+	UIManager.show_dialogue(dialogue, dialogue_position, override_pos)
 
 
+## Handle player entering dialogue area
+## @param body: The body that entered the area
 func _on_body_entered(body: Node2D) -> void:
 	if only_active_once and has_activated_already:
 		return
@@ -61,6 +65,8 @@ func _on_body_entered(body: Node2D) -> void:
 			_activate_dialogue()
 
 
+# Handle player exiting dialogue area
+## @param body: The body that exited the area
 func _on_body_exited(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		player_body_in = false
