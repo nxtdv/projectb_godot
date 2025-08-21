@@ -15,12 +15,19 @@ func _ready() -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if Input.is_action_just_pressed("Attack") and not is_attacking:
+	if Input.is_action_just_pressed("Attack") and not is_attacking and can_move:
 		_start_attack()
 		return
 
 	# If the player is attacking, we don't process movement
 	if is_attacking:
+		return
+
+	# Check if the player can move
+	if not can_move:
+		velocity = Vector2.ZERO
+		animation_player.play("idle")
+		move_and_slide()
 		return
 
 	var input_vector: Vector2 = Input.get_vector("Left", "Right", "Up", "Down")
