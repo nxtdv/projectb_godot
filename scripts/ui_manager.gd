@@ -48,27 +48,30 @@ func _calculate_dialogue_position(preference: String, override_pos: Vector2) -> 
 	var viewport_size: Vector2 = viewport.get_visible_rect().size
 	var camera: Camera2D       = viewport.get_camera_2d()
 
+	var margin_top: float    = 80.0
+	var margin_bottom: float = 100.0
+
 	if !camera:
-		return Vector2(viewport_size.x / 2, viewport_size.y - 100)
+		return Vector2(viewport_size.x / 2, viewport_size.y - margin_bottom)
 
 	var camera_center: Vector2 = camera.get_screen_center_position()
 	var player: Node           = get_tree().get_first_node_in_group("player")
 
 	match preference:
 		"top":
-			return Vector2(viewport_size.x / 2, 80)
+			return Vector2(viewport_size.x / 2, margin_top)
 		"bottom":
-			return Vector2(viewport_size.x / 2, viewport_size.y - 80)
+			return Vector2(viewport_size.x / 2, viewport_size.y - margin_bottom)
 		"center":
 			return Vector2(viewport_size.x / 2, viewport_size.y / 2)
 		_: # "auto"
 			if player:
 				if player.global_position.y > camera_center.y:
-					return Vector2(viewport_size.x / 2, 80)
+					return Vector2(viewport_size.x / 2, margin_top)
 				else:
-					return Vector2(viewport_size.x / 2, viewport_size.y - 80)
+					return Vector2(viewport_size.x / 2, viewport_size.y - margin_bottom)
 			else:
-				return Vector2(viewport_size.x / 2, viewport_size.y - 80)
+				return Vector2(viewport_size.x / 2, viewport_size.y - margin_bottom)
 
 
 ## Hide the currently active dialogue
