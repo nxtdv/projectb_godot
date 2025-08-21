@@ -14,11 +14,14 @@ expand_margin_top = 2.0
 expand_margin_right = 2.0
 expand_margin_bottom = 2.0
 
-[node name="dialogue_system" type="Node2D"]
+[node name="dialogue_system" type="Control"]
 z_index = 4096
+layout_mode = 3
+anchors_preset = 0
 script = ExtResource("1_sofqc")
 
 [node name="Panel" type="Panel" parent="."]
+layout_mode = 0
 offset_left = -144.0
 offset_top = -28.0
 offset_right = 144.0
@@ -26,6 +29,7 @@ offset_bottom = 28.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_yhpqp")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
 offset_left = -144.0
 offset_top = -28.0
 offset_right = 144.0

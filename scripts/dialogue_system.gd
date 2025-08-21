@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 const DialogueButtonPreload: PackedScene = preload("res://scenes/dialogue_button.tscn")
 @onready var DialogueLabel: RichTextLabel = $HBoxContainer/VBoxContainer/RichTextLabel
