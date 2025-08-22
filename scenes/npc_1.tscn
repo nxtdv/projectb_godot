@@ -1,10 +1,16 @@
-[gd_scene load_steps=36 format=3 uid="uid://byjgsqdrrt30x"]
+[gd_scene load_steps=46 format=3 uid="uid://byjgsqdrrt30x"]
 
 [ext_resource type="Texture2D" uid="uid://c6fd0y6er0ogp" path="res://assets/Characters/NPC Merchant-idle.png" id="1_8dm1u"]
 [ext_resource type="Script" uid="uid://q4sfm2ed2du7" path="res://scripts/npc_1.gd" id="1_xr7qm"]
 [ext_resource type="Texture2D" uid="uid://blq7tn40ooaie" path="res://assets/Characters/NPC Merchant-interacting-entry.png" id="2_3w2wa"]
 [ext_resource type="Texture2D" uid="uid://bqfrcbhg2uggn" path="res://assets/Characters/NPC Merchant-interacting-loop.png" id="3_xr7qm"]
 [ext_resource type="Texture2D" uid="uid://b6oaewp2wwjs8" path="res://assets/Characters/NPC Merchant-interacting-rest.png" id="4_tr1an"]
+[ext_resource type="PackedScene" uid="uid://c002j6i4amwax" path="res://scenes/dialogue_area_2d.tscn" id="6_56e07"]
+[ext_resource type="Script" uid="uid://m0hmyk4wsu3v" path="res://scripts/dialogue_export_resource.gd" id="7_3hym5"]
+[ext_resource type="Script" uid="uid://k4hj3upxhtl6" path="res://scripts/dialogue_function_resource.gd" id="8_tbgh4"]
+[ext_resource type="Script" uid="uid://dcjrrg2ifytdu" path="res://scripts/dialogue_choice_resource.gd" id="9_u2bb1"]
+[ext_resource type="Script" uid="uid://cv30tdk6nyrd8" path="res://scripts/dialogue_text_resource.gd" id="10_3hym5"]
+[ext_resource type="AudioStream" uid="uid://bnix6j4qftv42" path="res://assets/talk.wav" id="11_tbgh4"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3nhbe"]
 atlas = ExtResource("1_8dm1u")
@@ -221,8 +227,56 @@ animations = [{
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3w2wa"]
 height = 44.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_xr7qm"]
-radius = 22.0227
+[sub_resource type="Resource" id="Resource_5ipnd"]
+script = ExtResource("9_u2bb1")
+text = "BIENVENUE DANS MON JEU FDP"
+choice_text = Array[String](["Yes", "No"])
+choice_function_call = Array[ExtResource("8_tbgh4")]([null, null])
+text_speed = 18.0
+text_sound = ExtResource("11_tbgh4")
+text_volume_db = -8
+text_volume_pitch_min = 0.85
+text_volume_pitch_max = 1.15
+metadata/_custom_type_script = "uid://dcjrrg2ifytdu"
+
+[sub_resource type="Resource" id="Resource_tbgh4"]
+script = ExtResource("10_3hym5")
+text = "Regarde ces arbres mystérieux !"
+text_speed = 18.0
+text_sound = ExtResource("11_tbgh4")
+text_volume_db = -8
+text_volume_pitch_min = 0.85
+text_volume_pitch_max = 1.15
+camera_position = Vector2(-252, 236)
+camera_transition_time = 2.0
+metadata/_custom_type_script = "uid://cv30tdk6nyrd8"
+
+[sub_resource type="Resource" id="Resource_u2bb1"]
+script = ExtResource("10_3hym5")
+text = "Ils cachent un secret..."
+text_speed = 18.0
+text_sound = ExtResource("11_tbgh4")
+text_volume_db = -8
+text_volume_pitch_min = 0.85
+text_volume_pitch_max = 1.15
+camera_position = Vector2(999.999, 999.999)
+camera_transition_time = 1.0
+metadata/_custom_type_script = "uid://cv30tdk6nyrd8"
+
+[sub_resource type="Resource" id="Resource_thqnr"]
+script = ExtResource("10_3hym5")
+text = "Maintenant reviens me voir."
+text_speed = 18.0
+text_sound = ExtResource("11_tbgh4")
+text_volume_db = -8
+text_volume_pitch_min = 0.85
+text_volume_pitch_max = 1.15
+camera_position = Vector2(-1, -1)
+camera_transition_time = 1.5
+metadata/_custom_type_script = "uid://cv30tdk6nyrd8"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tbgh4"]
+size = Vector2(34, 44)
 
 [node name="npc_1" type="CharacterBody2D"]
 script = ExtResource("1_xr7qm")
@@ -230,63 +284,18 @@ script = ExtResource("1_xr7qm")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -24)
 sprite_frames = SubResource("SpriteFrames_gue5t")
-animation = &"interacting_rest"
+animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(5, -22)
 shape = SubResource("CapsuleShape2D_3w2wa")
 
-[node name="InteractionArea" type="Area2D" parent="."]
+[node name="DialogueArea2D" parent="." instance=ExtResource("6_56e07")]
+dialogue_position = "bottom"
+dialogue = Array[ExtResource("7_3hym5")]([SubResource("Resource_5ipnd"), SubResource("Resource_tbgh4"), SubResource("Resource_u2bb1"), SubResource("Resource_thqnr")])
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
-position = Vector2(4, -22)
-shape = SubResource("CircleShape2D_xr7qm")
-
-[node name="DialogueUI" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="DialoguePanel" type="Panel" parent="DialogueUI"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 52.0
-offset_top = -189.0
-offset_right = 202.0
-offset_bottom = -39.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="DialogueUI/DialoguePanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 10
-
-[node name="DialogueLabel" type="Label" parent="DialogueUI/DialoguePanel/VBoxContainer"]
-custom_minimum_size = Vector2(400, 80)
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-autowrap_mode = 3
-
-[node name="ContinueLabel" type="Label" parent="DialogueUI/DialoguePanel/VBoxContainer"]
-modulate = Color(0.827451, 0.827451, 0.827451, 1)
-layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "[E] Continuer"
-horizontal_alignment = 2
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DialogueArea2D"]
+position = Vector2(3, -22)
+shape = SubResource("RectangleShape2D_tbgh4")
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animation_finished"]
-[connection signal="body_entered" from="InteractionArea" to="." method="_on_interaction_area_body_entered"]
-[connection signal="body_exited" from="InteractionArea" to="." method="_on_interaction_area_body_exited"]

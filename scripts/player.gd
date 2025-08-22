@@ -5,20 +5,29 @@ extends CharacterBody2D
 const WALK_SPEED: float                        = 100.0
 const SPRINT_SPEED: float                      = 300.0
 var is_attacking: bool                         = false
+var can_move: bool                             = true
 
 
 func _ready() -> void:
+	add_to_group("player")
 	if not animation_player.animation_finished.is_connected(_on_animation_player_animation_finished):
 		animation_player.animation_finished.connect(_on_animation_player_animation_finished)
 
 
 func _physics_process(_delta: float) -> void:
-	if Input.is_action_just_pressed("Attack") and not is_attacking:
+	if Input.is_action_just_pressed("Attack") and not is_attacking and can_move:
 		_start_attack()
 		return
 
 	# If the player is attacking, we don't process movement
 	if is_attacking:
+		return
+
+	# Check if the player can move
+	if not can_move:
+		velocity = Vector2.ZERO
+		animation_player.play("idle")
+		move_and_slide()
 		return
 
 	var input_vector: Vector2 = Input.get_vector("Left", "Right", "Up", "Down")
