@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://byjgsqdrrt30x"]
+[gd_scene load_steps=46 format=3 uid="uid://byjgsqdrrt30x"]
 
 [ext_resource type="Texture2D" uid="uid://c6fd0y6er0ogp" path="res://assets/Characters/NPC Merchant-idle.png" id="1_8dm1u"]
 [ext_resource type="Script" uid="uid://q4sfm2ed2du7" path="res://scripts/npc_1.gd" id="1_xr7qm"]
@@ -227,31 +227,33 @@ animations = [{
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3w2wa"]
 height = 44.0
 
-[sub_resource type="Resource" id="Resource_qxjns"]
-script = ExtResource("8_tbgh4")
-target_path = NodePath("../AnimatedSprite2D")
-function_name = "interacting_loop"
-function_arguments = []
-hide_dialogue_box = false
-wait_for_signal_to_continue = ""
-metadata/_custom_type_script = "uid://k4hj3upxhtl6"
-
 [sub_resource type="Resource" id="Resource_5ipnd"]
 script = ExtResource("9_u2bb1")
-speaker_name = "NPC 1"
-speaker_img_Hframes = 1
-speaker_img_select_frames = 0
 text = "BIENVENUE DANS MON JEU FDP"
 choice_text = Array[String](["Yes", "No"])
-choice_function_call = Array[ExtResource("8_tbgh4")]([SubResource("Resource_qxjns"), null])
+choice_function_call = Array[ExtResource("8_tbgh4")]([null, null])
+text_speed = 18.0
+text_sound = ExtResource("11_tbgh4")
+text_volume_db = -8
+text_volume_pitch_min = 0.85
+text_volume_pitch_max = 1.15
 metadata/_custom_type_script = "uid://dcjrrg2ifytdu"
 
 [sub_resource type="Resource" id="Resource_tbgh4"]
 script = ExtResource("10_3hym5")
-speaker_name = "TALK"
-speaker_img_Hframes = 1
-speaker_img_rest_frames = 0
-text = "SALUT BIG BG JE TEST LA"
+text = "Regarde ces arbres mystérieux !"
+text_speed = 18.0
+text_sound = ExtResource("11_tbgh4")
+text_volume_db = -8
+text_volume_pitch_min = 0.85
+text_volume_pitch_max = 1.15
+camera_position = Vector2(-252, 236)
+camera_transition_time = 2.0
+metadata/_custom_type_script = "uid://cv30tdk6nyrd8"
+
+[sub_resource type="Resource" id="Resource_u2bb1"]
+script = ExtResource("10_3hym5")
+text = "Ils cachent un secret..."
 text_speed = 18.0
 text_sound = ExtResource("11_tbgh4")
 text_volume_db = -8
@@ -259,6 +261,18 @@ text_volume_pitch_min = 0.85
 text_volume_pitch_max = 1.15
 camera_position = Vector2(999.999, 999.999)
 camera_transition_time = 1.0
+metadata/_custom_type_script = "uid://cv30tdk6nyrd8"
+
+[sub_resource type="Resource" id="Resource_thqnr"]
+script = ExtResource("10_3hym5")
+text = "Maintenant reviens me voir."
+text_speed = 18.0
+text_sound = ExtResource("11_tbgh4")
+text_volume_db = -8
+text_volume_pitch_min = 0.85
+text_volume_pitch_max = 1.15
+camera_position = Vector2(-1, -1)
+camera_transition_time = 1.5
 metadata/_custom_type_script = "uid://cv30tdk6nyrd8"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tbgh4"]
@@ -278,7 +292,7 @@ shape = SubResource("CapsuleShape2D_3w2wa")
 
 [node name="DialogueArea2D" parent="." instance=ExtResource("6_56e07")]
 dialogue_position = "bottom"
-dialogue = Array[ExtResource("7_3hym5")]([SubResource("Resource_5ipnd"), SubResource("Resource_tbgh4")])
+dialogue = Array[ExtResource("7_3hym5")]([SubResource("Resource_5ipnd"), SubResource("Resource_tbgh4"), SubResource("Resource_u2bb1"), SubResource("Resource_thqnr")])
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DialogueArea2D"]
 position = Vector2(3, -22)
