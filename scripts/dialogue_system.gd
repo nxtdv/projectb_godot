@@ -2,7 +2,6 @@ extends Control
 
 const DialogueButtonPreload: PackedScene = preload("res://scenes/dialogue_button.tscn")
 @onready var DialogueLabel: RichTextLabel = $HBoxContainer/VBoxContainer/RichTextLabel
-@onready var SpeakerSprite: Sprite2D = $HBoxContainer/speaker_parent/Sprite2D
 
 var dialogue: Array[DE]
 var current_dialogue_item: int = 0
@@ -13,16 +12,21 @@ var player_node: CharacterBody2D
 func _ready() -> void:
 	visible = false
 	$HBoxContainer/VBoxContainer/button_container.visible = false
+	_find_player()
 
-	for i in get_tree().get_nodes_in_group('player'):
-		player_node = i
+
+func _find_player() -> void:
+	var players: Array[Node] = get_tree().get_nodes_in_group('player')
+	if players.size() > 0:
+		player_node = players[0]
+	else:
+		call_deferred("_find_player")
 
 
 func _process(_delta: float) -> void:
 	if current_dialogue_item == dialogue.size():
 		if !player_node:
-			for i in get_tree().get_nodes_in_group('player'):
-				player_node = i
+			_find_player()
 			return
 		player_node.can_move = true
 		queue_free()
@@ -53,13 +57,55 @@ func _process(_delta: float) -> void:
 			next_item = true
 
 
+func _animate_text(text: String, speed: float, audio_stream: AudioStream = null, volume_db: int = -8, pitch_min: float = 0.85, pitch_max: float = 1.15) -> void:
+	DialogueLabel.visible_characters = 0
+	DialogueLabel.text = text
+
+	if audio_stream:
+		$AudioStreamPlayer.stream = audio_stream
+		$AudioStreamPlayer.volume_db = volume_db
+
+	var text_without_brackets: String = _text_without_square_brackets(text)
+	var total_characters: int         = text_without_brackets.length()
+	var character_timer: float        = 0.0
+
+	while DialogueLabel.visible_characters < total_characters:
+		if Input.is_action_just_pressed('Interact'):
+			DialogueLabel.visible_characters = total_characters
+			break
+
+		character_timer += get_process_delta_time()
+		if character_timer >= (1.0 / speed) or text_without_brackets[DialogueLabel.visible_characters] == " ":
+			var character: String = text_without_brackets[DialogueLabel.visible_characters]
+			DialogueLabel.visible_characters += 1
+
+			if character != " " and audio_stream:
+				$AudioStreamPlayer.pitch_scale = randf_range(pitch_min, pitch_max)
+				$AudioStreamPlayer.play()
+
+			character_timer = 0.0
+
+		await get_tree().process_frame
+
+
 func _function_resource(i: DialogueFunction) -> void:
-	var target_node: Node = get_node(i.target_path)
-	if target_node.has_method(i.function_name):
-		if i.function_arguments.size() == 0:
-			target_node.call(i.function_name)
-		else:
-			target_node.callv(i.function_name, i.function_arguments)
+	var target_node: Node = get_node_or_null(i.target_path)
+	if not target_node:
+		push_error("Target node not found: " + str(i.target_path))
+		current_dialogue_item += 1
+		next_item = true
+		return
+
+	if not target_node.has_method(i.function_name):
+		push_error("Method not found: " + i.function_name + " on " + str(target_node))
+		current_dialogue_item += 1
+		next_item = true
+		return
+
+	if i.function_arguments.size() == 0:
+		target_node.call(i.function_name)
+	else:
+		target_node.callv(i.function_name, i.function_arguments)
 
 	if i.wait_for_signal_to_continue:
 		var signal_name: String = i.wait_for_signal_to_continue
@@ -75,16 +121,8 @@ func _function_resource(i: DialogueFunction) -> void:
 
 
 func _choice_resource(i: DialogueChoice) -> void:
-	DialogueLabel.name = i.speaker_name
-	DialogueLabel.text = i.text
-	DialogueLabel.visible_characters = -1
-	if i.speaker_img:
-		$HBoxContainer/speaker_parent.visible = true
-		SpeakerSprite.texture = i.speaker_img
-		SpeakerSprite.hframes = i.speaker_img_Hframes
-		SpeakerSprite.frame = min(i.speaker_img_select_frames, i.speaker_img_Hframes - 1)
-	else:
-		$HBoxContainer/speaker_parent.visible = false
+	await _animate_text(i.text, i.text_speed, i.text_sound, i.text_volume_db, i.text_volume_pitch_min, i.text_volume_pitch_max)
+
 	$HBoxContainer/VBoxContainer/button_container.visible = true
 
 	for item in i.choice_text.size():
@@ -109,6 +147,40 @@ func _choice_resource(i: DialogueChoice) -> void:
 	$HBoxContainer/VBoxContainer/button_container.get_child(0).grab_focus()
 
 
+func _text_resource(i: DialogueText) -> void:
+	var camera_tween: Tween = null
+	var camera: Camera2D    = get_viewport().get_camera_2d()
+	if camera and i.camera_position != Vector2(999.999, 999.999):
+		var target_position: Vector2 = i.camera_position
+
+		if i.camera_position == Vector2(-1, -1):
+			if player_node:
+				target_position = player_node.global_position
+			else:
+				_find_player()
+				if player_node:
+					target_position = player_node.global_position
+				else:
+					target_position = Vector2(999.999, 999.999)
+
+		if target_position != Vector2(999.999, 999.999):
+			camera_tween = create_tween().set_trans(Tween.TRANS_SINE)
+			camera_tween.tween_property(camera, "global_position", target_position, i.camera_transition_time)
+
+	await _animate_text(i.text, i.text_speed, i.text_sound, i.text_volume_db, i.text_volume_pitch_min, i.text_volume_pitch_max)
+
+	while true:
+		await get_tree().process_frame
+		if DialogueLabel.visible_characters == _text_without_square_brackets(i.text).length():
+			if Input.is_action_just_pressed('Interact'):
+				if camera_tween and camera_tween.is_valid():
+					await camera_tween.finished
+
+				current_dialogue_item += 1
+				next_item = true
+				break
+
+
 func _choice_button_pressed(target_node: Node, wait_for_signal_to_continue: String):
 	$HBoxContainer/VBoxContainer/button_container.visible = false
 	for i in $HBoxContainer/VBoxContainer/button_container.get_children():
@@ -116,7 +188,7 @@ func _choice_button_pressed(target_node: Node, wait_for_signal_to_continue: Stri
 
 	if wait_for_signal_to_continue:
 		var signal_name: String = wait_for_signal_to_continue
-		if target_node.has_signal(signal_name):
+		if target_node and target_node.has_signal(signal_name):
 			var signal_state: Dictionary = { "done": false }
 			var callable                 = func(_args): signal_state.done = true
 			target_node.connect(signal_name, callable, CONNECT_ONE_SHOT)
@@ -125,60 +197,6 @@ func _choice_button_pressed(target_node: Node, wait_for_signal_to_continue: Stri
 
 	current_dialogue_item += 1
 	next_item = true
-
-
-func _text_resource(i: DialogueText) -> void:
-	$AudioStreamPlayer.stream = i.text_sound
-	$AudioStreamPlayer.volume_db = i.text_volume_db
-	var camera: Camera2D = get_viewport().get_camera_2d()
-	if camera and i.camera_position != Vector2(999.999, 999.999):
-		var camera_tween: Tween = create_tween().set_trans(Tween.TRANS_SINE)
-		camera_tween.tween_property(camera, "global_position", i.camera_position, i.camera_transition_time)
-
-	if !i.speaker_img:
-		$HBoxContainer/speaker_parent.visible = false
-	else:
-		$HBoxContainer/speaker_parent.visible = true
-		SpeakerSprite.texture = i.speaker_img
-		SpeakerSprite.hframes = i.speaker_img_Hframes
-		SpeakerSprite.frame = 0
-
-	DialogueLabel.visible_characters = 0
-	DialogueLabel.name = i.speaker_name
-	DialogueLabel.text = i.text
-	var text_without_brackets: String = _text_without_square_brackets(i.text)
-	var total_characters: int         = text_without_brackets.length()
-	var character_timer: float        = 0.0
-
-	while DialogueLabel.visible_characters < total_characters:
-		if Input.is_action_just_pressed('ui_cancel'):
-			DialogueLabel.visible_characters = total_characters
-			break
-
-		character_timer += get_process_delta_time()
-		if character_timer >= (1.0 / i.text_speed) or text_without_brackets[DialogueLabel.visible_characters] == " ":
-			var character: String = text_without_brackets[DialogueLabel.visible_characters]
-			DialogueLabel.visible_characters += 1
-			if character != " ":
-				$AudioStreamPlayer.pitch_scale = randf_range(i.text_volume_pitch_min, i.text_volume_pitch_max)
-				$AudioStreamPlayer.play()
-				if i.speaker_img_Hframes != 1:
-					if SpeakerSprite.frame < i.speaker_img_Hframes - 1:
-						SpeakerSprite.frame += 1
-					else:
-						SpeakerSprite.frame = 0
-			character_timer = 0.0
-
-		await get_tree().process_frame
-
-	SpeakerSprite.frame = min(i.speaker_img_rest_frames, i.speaker_img_Hframes - 1)
-
-	while true:
-		await get_tree().process_frame
-		if DialogueLabel.visible_characters == total_characters:
-			if Input.is_action_just_pressed('ui_accept'):
-				current_dialogue_item += 1
-				next_item = true
 
 
 func _text_without_square_brackets(text: String) -> String:
