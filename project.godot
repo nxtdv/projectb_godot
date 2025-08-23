@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 UIManager="*res://scripts/ui_manager.gd"
 FpsCounter="*res://scripts/fps_counter.gd"
+AudioManager="*res://scripts/audio_manager.gd"
 
 [display]
 
@@ -28,6 +29,7 @@ window/stretch/mode="canvas_items"
 
 player=""
 ui_layer=""
+tilemap=""
 
 [input]
 
