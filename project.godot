@@ -29,7 +29,6 @@ window/stretch/mode="canvas_items"
 
 player=""
 ui_layer=""
-tilemap=""
 
 [input]
 
