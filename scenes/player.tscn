@@ -70,6 +70,29 @@ tracks/0/keys = {
 "update": 1,
 "values": [24, 25, 26, 27, 28, 29, 30, 31, 24, 25, 26, 27, 28, 29, 30, 31]
 }
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8, 1.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"values": [{
+"args": [],
+"method": &"_on_footstep_left"
+}, {
+"args": [],
+"method": &"_on_footstep_right"
+}, {
+"args": [],
+"method": &"_on_footstep_left"
+}, {
+"args": [],
+"method": &"_on_footstep_right"
+}]
+}
 
 [sub_resource type="Animation" id="Animation_dqkch"]
 resource_name = "walk"
@@ -87,6 +110,29 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [16, 16, 16, 17, 17, 18, 18, 19, 19, 16, 16, 17, 17, 18, 18, 19, 19]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 0.9, 1.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"values": [{
+"args": [],
+"method": &"_on_footstep_left"
+}, {
+"args": [],
+"method": &"_on_footstep_right"
+}, {
+"args": [],
+"method": &"_on_footstep_left"
+}, {
+"args": [],
+"method": &"_on_footstep_right"
+}]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dqkch"]
@@ -109,6 +155,7 @@ vframes = 9
 frame = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(0, -15)
 shape = SubResource("CapsuleShape2D_3vyb7")
 
