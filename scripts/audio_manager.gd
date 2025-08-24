@@ -1,7 +1,33 @@
 ﻿extends Node
 
-enum SoundType { WALK, RUN }
-const FOOTSTEP_SOUNDS: Dictionary              = {"grass": {
+## Footstep Audio Manager
+##
+## A comprehensive audio system for handling footstep sounds across different surface materials.
+## Uses an optimized audio pool system to prevent audio stuttering and improve performance.
+##
+## Features:
+## - Multiple surface materials (grass, stone, water)
+## - Walking and running sound variations
+## - Audio pooling for performance optimization
+## - Pitch randomization for natural sound variation
+## - Spatial audio support with position parameter
+##
+## Usage:
+## ```gdscript
+## # Simple usage
+## FootstepManager.play_footstep_sound("grass", true, player_position)
+## 
+## # Advanced usage with custom pitch
+## FootstepManager.play_footstep("stone", SoundType.WALK, player_position, 1.2)
+## ```
+
+## Sound type enumeration for different movement states
+enum SoundType {
+	WALK, ## Walking footstep sounds
+	RUN    ## Running footstep sounds
+}
+## Dictionary containing all preloaded footstep sounds organized by surface material and sound type
+const FOOTSTEP_SOUNDS: Dictionary = {"grass": {
 	SoundType.WALK: [
 	preload("res://assets/sounds/footsteps/grass/Footsteps_Grass_Walk/Footsteps_Walk_Grass_Mono_01.wav"),
 	preload("res://assets/sounds/footsteps/grass/Footsteps_Grass_Walk/Footsteps_Walk_Grass_Mono_02.wav"),
@@ -110,38 +136,98 @@ const FOOTSTEP_SOUNDS: Dictionary              = {"grass": {
 	preload("res://assets/sounds/footsteps/water/Footsteps_Water_Run/Footsteps_Water_Run_05.wav"),
 	],
 }}
+## Pool of AudioStreamPlayer2D nodes for efficient audio playback
 var _audio_players: Array[AudioStreamPlayer2D] = []
-var _current_player_index: int                 = 0
-const AUDIO_POOL_SIZE: int                     = 4
+## Current index for round-robin audio player selection
+var _current_player_index: int = 0
+## Size of the audio player pool - adjust based on your needs
+const AUDIO_POOL_SIZE: int = 4
+## Default volume for footstep sounds (in decibels)
+const DEFAULT_VOLUME_DB: float = -5.0
+## Default pitch variation range for natural sound variation
+const DEFAULT_PITCH_RANGE: Vector2 = Vector2(0.9, 1.1)
 
 
+## Initialize the audio player pool
 func _ready() -> void:
-	# Pré-alloue le pool d'AudioStreamPlayer2D
+	_initialize_audio_pool()
+
+
+## Creates and configures the pool of AudioStreamPlayer2D nodes
+func _initialize_audio_pool() -> void:
 	_audio_players.resize(AUDIO_POOL_SIZE)
 	for i in AUDIO_POOL_SIZE:
 		var player = AudioStreamPlayer2D.new()
-		#		player.volume_db = -5.0  # Volume optimal
+		player.volume_db = DEFAULT_VOLUME_DB
 		add_child(player)
 		_audio_players[i] = player
 
 
-func play_footstep(surface_material: String, sound_type: SoundType, position: Vector2 = Vector2.ZERO) -> void:
-	# Validation rapide - early return
-	var sounds = FOOTSTEP_SOUNDS.get(surface_material, FOOTSTEP_SOUNDS.grass).get(sound_type)
-	if sounds.is_empty():
-		return
+## Validates if a surface material exists in the sound dictionary
+## @param surface_material: The surface material to check
+## @return: The validated surface material (fallback to "grass" if not found)
+func _validate_surface_material(surface_material: String) -> String:
+	if not FOOTSTEP_SOUNDS.has(surface_material):
+		push_warning("Surface material '%s' not found, using 'grass' as fallback" % surface_material)
+		return "grass"
+	return surface_material
 
-	# Round-robin efficace sur le pool
+
+## Gets the next available audio player from the pool using round-robin selection
+## @return: An available AudioStreamPlayer2D from the pool
+func _get_next_audio_player() -> AudioStreamPlayer2D:
 	var player: AudioStreamPlayer2D = _audio_players[_current_player_index]
 	_current_player_index = (_current_player_index + 1) % AUDIO_POOL_SIZE
+	return player
 
-	# Configuration et lecture optimisées
+
+## Advanced footstep playback with full parameter control
+## @param surface_material: The surface material ("grass", "stone", "water")
+## @param sound_type: The type of sound (SoundType.WALK or SoundType.RUN)
+## @param position: World position for spatial audio (default: Vector2.ZERO)
+## @param pitch_scale: Custom pitch scaling (default: random variation)
+## @param volume_db: Custom volume in decibels (default: uses player's volume)
+func play_footstep(
+	surface_material: String,
+	sound_type: SoundType,
+	position: Vector2 = Vector2.ZERO,
+	pitch_scale: float = -1.0,
+	volume_db: float = -1000.0  # Use -1000 as "not set" indicator
+) -> void:
+	# Validate surface material
+	var validated_material: String = _validate_surface_material(surface_material)
+
+	# Get sounds array for the specified material and type
+	var sounds = FOOTSTEP_SOUNDS[validated_material][sound_type]
+	if sounds.is_empty():
+		push_warning("No sounds found for material '%s' and sound type '%s'" % [validated_material, sound_type])
+		return
+
+	# Get next available audio player
+	var player: AudioStreamPlayer2D = _get_next_audio_player()
+
+	# Configure audio stream
 	player.stream = sounds[randi() % sounds.size()]
 	player.global_position = position
-	player.pitch_scale = randf_range(0.9, 1.1)  # Variation subtile
+
+	# Set pitch (use custom value or random variation)
+	if pitch_scale > 0.0:
+		player.pitch_scale = pitch_scale
+	else:
+		player.pitch_scale = randf_range(DEFAULT_PITCH_RANGE.x, DEFAULT_PITCH_RANGE.y)
+
+	# Set volume if specified
+	if volume_db > -999.0: # Check if custom volume was provided
+		player.volume_db = volume_db
+
+	# Play the sound
 	player.play()
 
 
-# API simplifiée - une seule fonction publique
+## Simplified API for basic footstep playback
+## @param surface_material: The surface material ("grass", "stone", "water")
+## @param is_running: Whether the character is running (true) or walking (false)
+## @param position: World position for spatial audio
 func play_footstep_sound(surface_material: String, is_running: bool, position: Vector2) -> void:
-	play_footstep(surface_material, SoundType.RUN if is_running else SoundType.WALK, position)
+	var sound_type: int = SoundType.RUN if is_running else SoundType.WALK
+	play_footstep(surface_material, sound_type, position)
