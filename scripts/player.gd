@@ -169,7 +169,7 @@ func _play_footstep() -> void:
 	var is_running: bool         = _current_movement_state == "sprint"
 
 	# Use FootstepManager instead of AudioManager for consistency
-	AudioManager.play_footstep_sound(surface_material, is_running, global_position)
+	FootstepManager.play_footstep_sound(surface_material, is_running, global_position)
 
 
 ## Get current surface material with caching optimization
