@@ -1,5 +1,6 @@
-[gd_scene load_steps=30 format=4 uid="uid://bu843gxnla8m3"]
+[gd_scene load_steps=31 format=4 uid="uid://bu843gxnla8m3"]
 
+[ext_resource type="Script" uid="uid://bsrv41v818yh1" path="res://scripts/main_scene.gd" id="1_o6xl0"]
 [ext_resource type="Texture2D" uid="uid://dhv6y645pps1c" path="res://assets/Tilesets/Tileset-Terrain2.png" id="1_tefeu"]
 [ext_resource type="Texture2D" uid="uid://6ogfqfl5nhbp" path="res://assets/Tilesets/Tileset-Animated Terrains-8 frames-.png" id="2_o6xl0"]
 [ext_resource type="Texture2D" uid="uid://p8bys3imglut" path="res://assets/Tilesets/Tileset-Animated Terrains-8 frames- transparency.png" id="3_tipki"]
@@ -3057,6 +3058,7 @@ sources/3 = SubResource("TileSetScenesCollectionSource_wfs7u")
 sources/1 = SubResource("TileSetAtlasSource_wfs7u")
 
 [node name="Main" type="Node2D"]
+script = ExtResource("1_o6xl0")
 
 [node name="World" type="Node2D" parent="."]
 
