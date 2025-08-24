@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://n0kmevkgr1v0"
-path="res://.godot/imported/NPC Merchant-icons-sword.png-e4106ba351f0e1c9b7d96326980fee13.ctex"
+path="res://.godot/imported/NPC Merchant-icons-sword.png-91c8d100b250ab8bce8cef0a4b755822.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Characters/NPC Merchant-icons-sword.png"
-dest_files=["res://.godot/imported/NPC Merchant-icons-sword.png-e4106ba351f0e1c9b7d96326980fee13.ctex"]
+source_file="res://assets/characters/NPC Merchant-icons-sword.png"
+dest_files=["res://.godot/imported/NPC Merchant-icons-sword.png-91c8d100b250ab8bce8cef0a4b755822.ctex"]
 
 [params]
 

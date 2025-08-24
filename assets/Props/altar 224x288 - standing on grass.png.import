@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cpn10ipp2dabq"
-path="res://.godot/imported/altar 224x288 - standing on grass.png-ab68250d2caa8ca41cf695661307ed57.ctex"
+path="res://.godot/imported/altar 224x288 - standing on grass.png-dc8d5cce0b19a977a79f0b680e962293.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Props/altar 224x288 - standing on grass.png"
-dest_files=["res://.godot/imported/altar 224x288 - standing on grass.png-ab68250d2caa8ca41cf695661307ed57.ctex"]
+source_file="res://assets/props/altar 224x288 - standing on grass.png"
+dest_files=["res://.godot/imported/altar 224x288 - standing on grass.png-dc8d5cce0b19a977a79f0b680e962293.ctex"]
 
 [params]
 

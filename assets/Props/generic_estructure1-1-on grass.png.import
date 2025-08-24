@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dsufvi3rj787t"
-path="res://.godot/imported/generic_estructure1-1-on grass.png-01e0c6d6cddb1e92886bfb43047a1418.ctex"
+path="res://.godot/imported/generic_estructure1-1-on grass.png-257900bd270d34c4836d89ffcc74f6e2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Props/generic_estructure1-1-on grass.png"
-dest_files=["res://.godot/imported/generic_estructure1-1-on grass.png-01e0c6d6cddb1e92886bfb43047a1418.ctex"]
+source_file="res://assets/props/generic_estructure1-1-on grass.png"
+dest_files=["res://.godot/imported/generic_estructure1-1-on grass.png-257900bd270d34c4836d89ffcc74f6e2.ctex"]
 
 [params]
 

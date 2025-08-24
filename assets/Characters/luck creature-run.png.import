@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ck277ig2ugwl6"
-path="res://.godot/imported/luck creature-run.png-a8e9f09a32a235ff2ca83aba0d844a6d.ctex"
+path="res://.godot/imported/luck creature-run.png-ff2c16520a4e0a8432984801ab94bcd5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Characters/luck creature-run.png"
-dest_files=["res://.godot/imported/luck creature-run.png-a8e9f09a32a235ff2ca83aba0d844a6d.ctex"]
+source_file="res://assets/characters/luck creature-run.png"
+dest_files=["res://.godot/imported/luck creature-run.png-ff2c16520a4e0a8432984801ab94bcd5.ctex"]
 
 [params]
 

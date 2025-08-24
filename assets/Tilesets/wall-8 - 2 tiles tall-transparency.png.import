@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://8x2xp5o7scgx"
-path="res://.godot/imported/wall-8 - 2 tiles tall-transparency.png-ee648d0ba54524c24ff402423878be7a.ctex"
+path="res://.godot/imported/wall-8 - 2 tiles tall-transparency.png-a3f3681d531a2272e444d66b1f29749f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Tilesets/wall-8 - 2 tiles tall-transparency.png"
-dest_files=["res://.godot/imported/wall-8 - 2 tiles tall-transparency.png-ee648d0ba54524c24ff402423878be7a.ctex"]
+source_file="res://assets/tilesets/wall-8 - 2 tiles tall-transparency.png"
+dest_files=["res://.godot/imported/wall-8 - 2 tiles tall-transparency.png-a3f3681d531a2272e444d66b1f29749f.ctex"]
 
 [params]
 
