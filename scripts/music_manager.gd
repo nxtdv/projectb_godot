@@ -43,13 +43,14 @@ const MUSIC_TRACKS: Dictionary = {"menu": {
 var _primary_player: AudioStreamPlayer
 ## Secondary audio stream player for crossfading
 var _secondary_player: AudioStreamPlayer
-## Tween for smooth volume transitions
+## Tween for smooth volume transitions (legacy - now using individual tweens)
 var _fade_tween: Tween
 ## Current music state
 var _current_track_name: String = ""
 var _current_category: String   = ""
 var _is_playing: bool           = false
 var _is_paused: bool            = false
+var _should_loop: bool          = true
 ## Volume settings
 var _master_music_volume: float = 1.0
 ## Default fade duration for transitions
@@ -72,6 +73,9 @@ func _setup_audio_players() -> void:
 	_primary_player.volume_db = DEFAULT_VOLUME_DB
 	_primary_player.bus = "Music"  # Assumes you have a "Music" audio bus
 	add_child(_primary_player)
+
+	# Connect finished signal for auto-loop fallback
+	_primary_player.finished.connect(_on_music_finished)
 
 	# Secondary player setup for crossfading
 	_secondary_player = AudioStreamPlayer.new()
@@ -152,6 +156,9 @@ func play_music(track_identifier: String, fade_in_duration: float = 0.0, loop: b
 	if music_stream is AudioStreamOggVorbis:
 		music_stream.loop = loop
 
+	# Store loop preference for manual looping fallback
+	_should_loop = loop
+
 	_current_track_name = track_name
 	_current_category = category
 	_is_playing = true
@@ -164,8 +171,6 @@ func play_music(track_identifier: String, fade_in_duration: float = 0.0, loop: b
 	else:
 		_primary_player.volume_db = _calculate_target_volume()
 		_primary_player.play()
-
-	print("Playing music: %s/%s" % [category, track_name])
 
 
 ## Search for a track in all categories
@@ -288,7 +293,8 @@ func set_volume(volume: float, fade_duration: float = 0.0) -> void:
 func _calculate_target_volume() -> float:
 	if _master_music_volume <= 0.0:
 		return -80.0
-	return DEFAULT_VOLUME_DB + (20.0 * log(_master_music_volume) / log(10))
+	# More efficient calculation: avoid division
+	return DEFAULT_VOLUME_DB + linear_to_db(_master_music_volume)
 
 
 ## Fade a player to target volume
@@ -318,6 +324,12 @@ func _fade_to_volume(player: AudioStreamPlayer, target_volume_db: float, duratio
 func _set_player_volume(player: AudioStreamPlayer, volume_db: float) -> void:
 	if is_instance_valid(player):
 		player.volume_db = volume_db
+
+
+## Handle music finished event for manual looping
+func _on_music_finished() -> void:
+	if _should_loop and _is_playing and not _is_paused:
+		_primary_player.play()
 
 
 ## Public API for querying music state
