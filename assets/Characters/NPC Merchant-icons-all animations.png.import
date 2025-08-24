@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b57v3k4fndne2"
-path="res://.godot/imported/NPC Merchant-icons-all animations.png-c208e2c691e9d96e06cc814378aa4efb.ctex"
+path="res://.godot/imported/NPC Merchant-icons-all animations.png-a497d0d3a09d0e47706591ef828a9897.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Characters/NPC Merchant-icons-all animations.png"
-dest_files=["res://.godot/imported/NPC Merchant-icons-all animations.png-c208e2c691e9d96e06cc814378aa4efb.ctex"]
+source_file="res://assets/characters/NPC Merchant-icons-all animations.png"
+dest_files=["res://.godot/imported/NPC Merchant-icons-all animations.png-a497d0d3a09d0e47706591ef828a9897.ctex"]
 
 [params]
 

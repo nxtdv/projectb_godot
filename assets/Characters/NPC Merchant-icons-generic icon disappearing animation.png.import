@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bw1nwkp2kkgp3"
-path="res://.godot/imported/NPC Merchant-icons-generic icon disappearing animation.png-3fed0b644c5cbe2ffee89c710fd892dd.ctex"
+path="res://.godot/imported/NPC Merchant-icons-generic icon disappearing animation.png-bd37e37aa28c344577e9060bdcfb843b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Characters/NPC Merchant-icons-generic icon disappearing animation.png"
-dest_files=["res://.godot/imported/NPC Merchant-icons-generic icon disappearing animation.png-3fed0b644c5cbe2ffee89c710fd892dd.ctex"]
+source_file="res://assets/characters/NPC Merchant-icons-generic icon disappearing animation.png"
+dest_files=["res://.godot/imported/NPC Merchant-icons-generic icon disappearing animation.png-bd37e37aa28c344577e9060bdcfb843b.ctex"]
 
 [params]
 
