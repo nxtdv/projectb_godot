@@ -9,7 +9,7 @@ extends CharacterBody2D
 ## - Movement with walk/sprint speeds
 ## - Surface material detection for footstep sounds
 ## - Attack system with movement lockout
-## - Animation state management
+## - Animation state management with collision detection
 ## - Automatic sprite flipping based on movement direction
 ##
 ## Requirements:
@@ -34,6 +34,8 @@ var _current_movement_state: String = "idle"
 ## Cache for the last detected surface material to avoid unnecessary lookups
 var _cached_surface_material: String = FALLBACK_MATERIAL
 var _last_tile_position: Vector2i    = Vector2i.MAX  # Invalid position to force initial check
+## Store previous position to detect actual movement
+var _previous_position: Vector2
 
 
 ## Initialize player and validate dependencies
@@ -41,6 +43,7 @@ func _ready() -> void:
 	add_to_group("player")
 	_connect_signals()
 	_validate_dependencies()
+	_previous_position = global_position
 
 
 ## Connect necessary signals with error handling
@@ -98,17 +101,23 @@ func _handle_movement() -> void:
 	var input_vector: Vector2 = Input.get_vector("Left", "Right", "Up", "Down")
 	var is_sprinting: bool    = Input.is_action_pressed("Sprint") and input_vector != Vector2.ZERO
 
+	# Store position before movement
+	_previous_position = global_position
+
 	# Apply velocity
 	velocity = input_vector.normalized() * _get_movement_speed(is_sprinting)
 
 	# Update sprite direction
 	_update_sprite_direction(velocity.x)
 
-	# Update animations based on movement state
-	_update_movement_animation(input_vector, is_sprinting)
-
 	# Move the character
 	move_and_slide()
+
+	# Check if we actually moved after collision detection
+	var actually_moved: bool = global_position.distance_squared_to(_previous_position) > 0.01
+
+	# Update animations based on actual movement, not just input
+	_update_movement_animation(input_vector, is_sprinting, actually_moved)
 
 
 ## Get movement speed based on sprinting state
@@ -125,16 +134,17 @@ func _update_sprite_direction(velocity_x: float) -> void:
 		sprite_2d.flip_h = velocity_x < 0.0
 
 
-## Update movement animations based on input and state
+## Update movement animations based on input, state and actual movement
 ## @param input_vector: The current input direction vector
 ## @param is_sprinting: Whether the player is sprinting
-func _update_movement_animation(input_vector: Vector2, is_sprinting: bool) -> void:
+## @param actually_moved: Whether the player actually moved this frame
+func _update_movement_animation(input_vector: Vector2, is_sprinting: bool, actually_moved: bool) -> void:
 	if not animation_player:
 		return
 
 	var target_animation: String
 
-	if input_vector == Vector2.ZERO:
+	if input_vector == Vector2.ZERO or not actually_moved:
 		target_animation = "idle"
 		_current_movement_state = "idle"
 	elif is_sprinting:
@@ -227,4 +237,3 @@ func _on_animation_player_animation_finished(animation_name: String) -> void:
 			_end_attack()
 		_:
 			pass  # Handle other animations if needed
-		
