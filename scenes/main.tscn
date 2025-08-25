@@ -1,9 +1,9 @@
 [gd_scene load_steps=31 format=4 uid="uid://bu843gxnla8m3"]
 
 [ext_resource type="Script" uid="uid://bsrv41v818yh1" path="res://scripts/main_scene.gd" id="1_o6xl0"]
-[ext_resource type="Texture2D" uid="uid://dhv6y645pps1c" path="res://assets/Tilesets/Tileset-Terrain2.png" id="1_tefeu"]
-[ext_resource type="Texture2D" uid="uid://6ogfqfl5nhbp" path="res://assets/Tilesets/Tileset-Animated Terrains-8 frames-.png" id="2_o6xl0"]
-[ext_resource type="Texture2D" uid="uid://p8bys3imglut" path="res://assets/Tilesets/Tileset-Animated Terrains-8 frames- transparency.png" id="3_tipki"]
+[ext_resource type="Texture2D" uid="uid://dhv6y645pps1c" path="res://assets/tilesets/Tileset-Terrain2.png" id="1_tefeu"]
+[ext_resource type="Texture2D" uid="uid://6ogfqfl5nhbp" path="res://assets/tilesets/Tileset-Animated Terrains-8 frames-.png" id="2_o6xl0"]
+[ext_resource type="Texture2D" uid="uid://p8bys3imglut" path="res://assets/tilesets/Tileset-Animated Terrains-8 frames- transparency.png" id="3_tipki"]
 [ext_resource type="PackedScene" uid="uid://diwoqsd1gpvix" path="res://scenes/player.tscn" id="4_85g3d"]
 [ext_resource type="PackedScene" uid="uid://iwxgb3tre0g2" path="res://scenes/tree_1.tscn" id="5_choun"]
 [ext_resource type="PackedScene" uid="uid://byjgsqdrrt30x" path="res://scenes/npc_1.tscn" id="6_ya4ey"]
