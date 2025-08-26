@@ -1,4 +1,4 @@
-﻿extends Node
+extends Node
 
 ## Footstep Audio Manager
 ##
@@ -134,6 +134,31 @@ const FOOTSTEP_SOUNDS: Dictionary = {"grass": {
 	preload("res://assets/sounds/footsteps/water/Footsteps_Water_Run/Footsteps_Water_Run_03.wav"),
 	preload("res://assets/sounds/footsteps/water/Footsteps_Water_Run/Footsteps_Water_Run_04.wav"),
 	preload("res://assets/sounds/footsteps/water/Footsteps_Water_Run/Footsteps_Water_Run_05.wav"),
+	],
+}, "dirt": {
+	SoundType.WALK: [
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Walk/Footsteps_DirtyGround_Walk_01.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Walk/Footsteps_DirtyGround_Walk_02.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Walk/Footsteps_DirtyGround_Walk_03.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Walk/Footsteps_DirtyGround_Walk_04.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Walk/Footsteps_DirtyGround_Walk_05.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Walk/Footsteps_DirtyGround_Walk_06.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Walk/Footsteps_DirtyGround_Walk_07.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Walk/Footsteps_DirtyGround_Walk_08.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Walk/Footsteps_DirtyGround_Walk_09.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Walk/Footsteps_DirtyGround_Walk_10.wav"),
+	],
+	SoundType.RUN: [
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Run/Footsteps_DirtyGround_Run_01.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Run/Footsteps_DirtyGround_Run_02.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Run/Footsteps_DirtyGround_Run_03.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Run/Footsteps_DirtyGround_Run_04.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Run/Footsteps_DirtyGround_Run_05.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Run/Footsteps_DirtyGround_Run_06.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Run/Footsteps_DirtyGround_Run_07.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Run/Footsteps_DirtyGround_Run_08.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Run/Footsteps_DirtyGround_Run_09.wav"),
+	preload("res://assets/sounds/footsteps/dirt/Footsteps_Dirt_Run/Footsteps_DirtyGround_Run_10.wav"),
 	],
 }}
 ## Pool of AudioStreamPlayer2D nodes for efficient audio playback
