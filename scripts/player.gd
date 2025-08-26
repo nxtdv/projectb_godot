@@ -17,7 +17,6 @@ extends CharacterBody2D
 ## - Footstep animation events calling _on_footstep_left() and _on_footstep_right()
 ## - TileMap with custom data "material" for surface detection
 ## - AudioManager autoload for footstep sounds
-
 @onready var sprite_2d: Sprite2D = $Sprite2D
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var tile_map_layer: TileMapLayer = $"../TilemapLayers/TileMapLayer"
@@ -185,28 +184,32 @@ func _play_footstep() -> void:
 ## Get current surface material with caching optimization
 ## @return: The current surface material string, or fallback material if none found
 func _get_current_material() -> String:
-	if not tile_map_layer:
-		return FALLBACK_MATERIAL
+	return MaterialManager.get_material_at_position(global_position)
 
-	# Get current tile position
-	var current_tile_pos: Vector2i = tile_map_layer.local_to_map(tile_map_layer.to_local(global_position))
 
-	# Use cached material if we're still on the same tile
-	if current_tile_pos == _last_tile_position:
-		return _cached_surface_material
-
-	# Update cache
-	_last_tile_position = current_tile_pos
-
-	# Get tile data and extract material
-	var tile_data: TileData = tile_map_layer.get_cell_tile_data(current_tile_pos)
-
-	if tile_data and tile_data.get_custom_data("material"):
-		_cached_surface_material = str(tile_data.get_custom_data("material"))
-	else:
-		_cached_surface_material = FALLBACK_MATERIAL
-
-	return _cached_surface_material
+#func _get_current_material() -> String:
+#	if not tile_map_layer:
+#		return FALLBACK_MATERIAL
+#
+#	# Get current tile position
+#	var current_tile_pos: Vector2i = tile_map_layer.local_to_map(tile_map_layer.to_local(global_position))
+#
+#	# Use cached material if we're still on the same tile
+#	if current_tile_pos == _last_tile_position:
+#		return _cached_surface_material
+#
+#	# Update cache
+#	_last_tile_position = current_tile_pos
+#
+#	# Get tile data and extract material
+#	var tile_data: TileData = tile_map_layer.get_cell_tile_data(current_tile_pos)
+#
+#	if tile_data and tile_data.get_custom_data("material"):
+#		_cached_surface_material = str(tile_data.get_custom_data("material"))
+#	else:
+#		_cached_surface_material = FALLBACK_MATERIAL
+#
+#	return _cached_surface_material
 
 
 ## Start attack sequence with movement lockout
