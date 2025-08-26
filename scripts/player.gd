@@ -30,9 +30,6 @@ var is_attacking: bool = false
 var can_move: bool     = true
 ## Current movement state for footstep detection
 var _current_movement_state: String = "idle"
-## Cache for the last detected surface material to avoid unnecessary lookups
-var _cached_surface_material: String = FALLBACK_MATERIAL
-var _last_tile_position: Vector2i    = Vector2i.MAX  # Invalid position to force initial check
 ## Store previous position to detect actual movement
 var _previous_position: Vector2
 
@@ -185,31 +182,6 @@ func _play_footstep() -> void:
 ## @return: The current surface material string, or fallback material if none found
 func _get_current_material() -> String:
 	return MaterialManager.get_material_at_position(global_position)
-
-
-#func _get_current_material() -> String:
-#	if not tile_map_layer:
-#		return FALLBACK_MATERIAL
-#
-#	# Get current tile position
-#	var current_tile_pos: Vector2i = tile_map_layer.local_to_map(tile_map_layer.to_local(global_position))
-#
-#	# Use cached material if we're still on the same tile
-#	if current_tile_pos == _last_tile_position:
-#		return _cached_surface_material
-#
-#	# Update cache
-#	_last_tile_position = current_tile_pos
-#
-#	# Get tile data and extract material
-#	var tile_data: TileData = tile_map_layer.get_cell_tile_data(current_tile_pos)
-#
-#	if tile_data and tile_data.get_custom_data("material"):
-#		_cached_surface_material = str(tile_data.get_custom_data("material"))
-#	else:
-#		_cached_surface_material = FALLBACK_MATERIAL
-#
-#	return _cached_surface_material
 
 
 ## Start attack sequence with movement lockout
