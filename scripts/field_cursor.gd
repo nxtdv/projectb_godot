@@ -32,7 +32,7 @@ extends Node2D
 ## Terrain set ID in the tileset resource
 @export var terrain_set: int = 0
 ## Terrain type ID for tilled soil
-@export var terrain: int = 3
+@export var terrain: int = 2
 @export_group("Interaction Settings")
 ## Maximum interaction distance in pixels
 @export var max_distance: float = 64.0
