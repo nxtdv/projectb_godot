@@ -1,9 +1,10 @@
-[gd_resource type="TileSet" load_steps=28 format=3 uid="uid://d2qsgnk8pjdvb"]
+[gd_resource type="TileSet" load_steps=30 format=3 uid="uid://d2qsgnk8pjdvb"]
 
 [ext_resource type="Texture2D" uid="uid://dhv6y645pps1c" path="res://assets/tilesets/Tileset-Terrain2.png" id="1_h7yuw"]
 [ext_resource type="Texture2D" uid="uid://6ogfqfl5nhbp" path="res://assets/tilesets/Tileset-Animated Terrains-8 frames-.png" id="2_wow46"]
 [ext_resource type="Texture2D" uid="uid://b2d2ws7xkiucm" path="res://assets/tilesets/farm_tileset.png" id="3_4mg0d"]
 [ext_resource type="Texture2D" uid="uid://p8bys3imglut" path="res://assets/tilesets/Tileset-Animated Terrains-8 frames- transparency.png" id="4_gbd8m"]
+[ext_resource type="Texture2D" uid="uid://ciffao536blfi" path="res://assets/tilesets/farm_crops.png" id="5_753ld"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hiskw"]
 texture = ExtResource("1_h7yuw")
@@ -3383,6 +3384,21 @@ _bundled = {
 [sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_wfs7u"]
 scenes/1/scene = SubResource("PackedScene_0naf5")
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1kfk1"]
+texture = ExtResource("5_753ld")
+0:1/0 = 0
+0:1/0/custom_data_1 = &"carrot"
+1:1/0 = 0
+1:1/0/custom_data_1 = &"carrot"
+2:1/0 = 0
+2:1/0/custom_data_1 = &"carrot"
+4:1/0 = 0
+4:1/0/custom_data_1 = &"carrot"
+3:0/size_in_atlas = Vector2i(1, 2)
+3:0/0 = 0
+3:0/0/texture_origin = Vector2i(0, 8)
+3:0/0/custom_data_1 = &"carrot"
+
 [resource]
 terrain_set_0/mode = 0
 terrain_set_0/terrain_0/name = "grass"
@@ -3393,7 +3409,10 @@ terrain_set_0/terrain_2/name = "Farm field"
 terrain_set_0/terrain_2/color = Color(0.850058, 0.294561, 1, 1)
 custom_data_layer_0/name = "material"
 custom_data_layer_0/type = 21
+custom_data_layer_1/name = "crop_name"
+custom_data_layer_1/type = 21
 sources/0 = SubResource("TileSetAtlasSource_hiskw")
 sources/3 = SubResource("TileSetScenesCollectionSource_wfs7u")
 sources/1 = SubResource("TileSetAtlasSource_wfs7u")
 sources/2 = SubResource("TileSetAtlasSource_ya4ey")
+sources/4 = SubResource("TileSetAtlasSource_1kfk1")
