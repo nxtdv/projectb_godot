@@ -8,7 +8,7 @@ extends Node2D
 											   "carrot": {
 												   "name": "Carrot",
 												   "source_id": 4,
-												   "atlas_coords": [Vector2i(4, 1)],
+												   "atlas_coords": [Vector2i(0, 1)],
 											   }
 										   }
 
