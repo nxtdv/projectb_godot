@@ -48,9 +48,9 @@ var offset_distances_sq: Array[int] = []       # Squared distances for each offs
 var range_squared: int                         # Max range squared for comparisons
 var tile_size: int                  = 16                        # Tile size in pixels
 # Sprite management - zero allocation during updates
-var sprite_pool: Dictionary        = {}               # Vector2i -> Sprite2D
-var currently_visible: Dictionary  = {}         # Vector2i -> bool (previous frame state)
-var needs_visibility_update: Array = []       # Reused array for visibility changes
+var sprite_pool: Dictionary                  = {}               # Vector2i -> Sprite2D
+var currently_visible: Dictionary            = {}         # Vector2i -> bool (previous frame state)
+var needs_visibility_update: Array[Vector2i] = []  # Reused array for visibility changes
 # Shared resources
 var shared_texture: ImageTexture
 var last_player_tile: Vector2i = Vector2i.MAX
@@ -61,7 +61,7 @@ const COLOR_CAN_REMOVE: Color = Color(0.8, 0.8, 0.2, 0.6)  # Yellow
 const COLOR_INVALID: Color    = Color(0.8, 0.2, 0.2, 0.6)     # Red
 
 
-func _ready():
+func _ready() -> void:
 	await get_tree().process_frame
 	player = get_tree().get_first_node_in_group("player")
 	_precompute_all_values()
@@ -69,7 +69,7 @@ func _ready():
 
 
 ## Precompute all possible tile offsets and distances within range
-func _precompute_all_values():
+func _precompute_all_values() -> void:
 	range_squared = int(max_distance * max_distance)
 	var range_in_tiles: int = int(max_distance / tile_size) + 1
 
@@ -79,9 +79,9 @@ func _precompute_all_values():
 	# Precompute all valid offsets and their squared distances
 	for x in range(-range_in_tiles, range_in_tiles + 1):
 		for y in range(-range_in_tiles, range_in_tiles + 1):
-			var pixel_x = x * tile_size
-			var pixel_y = y * tile_size
-			var dist_sq = pixel_x * pixel_x + pixel_y * pixel_y
+			var pixel_x: int = x * tile_size
+			var pixel_y: int = y * tile_size
+			var dist_sq: int = pixel_x * pixel_x + pixel_y * pixel_y
 
 			if dist_sq <= range_squared:
 				tile_offsets.append(Vector2i(x, y))
@@ -89,7 +89,7 @@ func _precompute_all_values():
 
 
 ## Create shared texture and initialize reused arrays
-func _create_shared_resources():
+func _create_shared_resources() -> void:
 	var image: Image = Image.create(1, 1, false, Image.FORMAT_RGBA8)
 	image.fill(Color.WHITE)
 	shared_texture = ImageTexture.new()
@@ -119,7 +119,7 @@ func _input(event: InputEvent) -> void:
 				_remove_tilled_soil_fast(cell_pos)
 
 
-func _process(_delta) -> void:
+func _process(_delta: float) -> void:
 	if not farming_mode or not player:
 		return
 
@@ -131,7 +131,7 @@ func _process(_delta) -> void:
 	_update_range_grid_differential()
 
 
-func _toggle_farming_mode():
+func _toggle_farming_mode() -> void:
 	farming_mode = !farming_mode
 
 	if farming_mode:
@@ -173,7 +173,7 @@ func _update_range_grid_differential() -> void:
 
 	# Show/update sprites that are now visible
 	for i in update_count:
-		var pos              = needs_visibility_update[i]
+		var pos: Vector2i    = needs_visibility_update[i]
 		var sprite: Sprite2D = _get_or_create_sprite_fast(pos)
 		sprite.visible = true
 		sprite.modulate = _get_tile_color_fast(pos)
@@ -187,7 +187,7 @@ func _update_range_grid_differential() -> void:
 
 
 ## Force complete rebuild of visible grid
-func _force_full_update():
+func _force_full_update() -> void:
 	last_player_tile = Vector2i.MAX  # Force update
 	currently_visible.clear()
 	_update_range_grid_differential()
@@ -198,13 +198,14 @@ func _get_or_create_sprite_fast(tile_pos: Vector2i) -> Sprite2D:
 	if tile_pos in sprite_pool:
 		return sprite_pool[tile_pos]
 
-	var sprite = Sprite2D.new()
+	var sprite: Sprite2D = Sprite2D.new()
 	sprite.texture = shared_texture
 	sprite.scale = Vector2(tile_size, tile_size)
 
-	# Direct position calculation without double conversion
+	# Centered sprite positioning for proper grid alignment
 	var world_pos: Vector2 = tilled_soil_tilemap_layer.map_to_local(tile_pos)
 	sprite.position = world_pos
+	sprite.centered = true  # Ensures sprite centers on tile
 
 	add_child(sprite)
 	sprite_pool[tile_pos] = sprite
@@ -225,7 +226,7 @@ func _add_tilled_soil_fast(cell_pos: Vector2i) -> void:
 
 
 ## Fast tile removal with minimal validation
-func _remove_tilled_soil_fast(cell_pos: Vector2i):
+func _remove_tilled_soil_fast(cell_pos: Vector2i) -> void:
 	tilled_soil_tilemap_layer.set_cells_terrain_connect([cell_pos], terrain_set, -1, true)
 	_update_single_sprite_color(cell_pos)
 
@@ -245,14 +246,17 @@ func _get_tile_color_fast(tile_pos: Vector2i) -> Color:
 
 
 ## Direct sprite color update without dictionary lookups
-func _update_single_sprite_color(tile_pos: Vector2i):
+func _update_single_sprite_color(tile_pos: Vector2i) -> void:
 	if tile_pos in sprite_pool:
 		sprite_pool[tile_pos].modulate = _get_tile_color_fast(tile_pos)
 
 
-## Ultra-fast player position using integer coordinates
+## Ultra-fast player position using integer coordinates with proper centering
 func _get_player_tile_pos_fast() -> Vector2i:
+	# Convert player position to tilemap local coordinates
 	var player_local: Vector2 = tilled_soil_tilemap_layer.to_local(player.global_position)
+
+	# Direct conversion - no offset needed as map_to_local already centers properly
 	return tilled_soil_tilemap_layer.local_to_map(player_local)
 
 
@@ -277,14 +281,14 @@ func _get_cell_under_mouse() -> Vector2i:
 
 
 ## Batch hide all sprites for mode toggle
-func _hide_all_sprites_fast():
+func _hide_all_sprites_fast() -> void:
 	for sprite in sprite_pool.values():
 		sprite.visible = false
 	currently_visible.clear()
 
 
 ## Cleanup resources on destruction
-func _exit_tree():
+func _exit_tree() -> void:
 	for sprite in sprite_pool.values():
 		if is_instance_valid(sprite):
 			sprite.queue_free()
