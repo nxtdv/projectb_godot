@@ -32,7 +32,7 @@ extends Node2D
 ## Terrain set ID in the tileset resource
 @export var terrain_set: int = 0
 ## Terrain type ID for tilled soil
-@export var terrain: int = 2
+@export var terrain: int = 3
 @export_group("Interaction Settings")
 ## Maximum interaction distance in pixels
 @export var max_distance: float = 64.0
@@ -251,13 +251,16 @@ func _update_single_sprite_color(tile_pos: Vector2i) -> void:
 		sprite_pool[tile_pos].modulate = _get_tile_color_fast(tile_pos)
 
 
-## Ultra-fast player position using integer coordinates with proper centering
+## Ultra-fast player position using integer coordinates with sprite offset compensation
 func _get_player_tile_pos_fast() -> Vector2i:
 	# Convert player position to tilemap local coordinates
 	var player_local: Vector2 = tilled_soil_tilemap_layer.to_local(player.global_position)
 
-	# Direct conversion - no offset needed as map_to_local already centers properly
-	return tilled_soil_tilemap_layer.local_to_map(player_local)
+	# Compensate for sprite offset (player sprite is offset by -16px on Y)
+	var sprite_offset: Vector2 = Vector2(0, -16)  # Match your player's sprite offset
+	var corrected_pos: Vector2 = player_local + sprite_offset
+
+	return tilled_soil_tilemap_layer.local_to_map(corrected_pos)
 
 
 ## Fast interaction check using precomputed player tile position
