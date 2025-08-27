@@ -1,4 +1,3 @@
-# field_cursor.gd - Version ultra-optimisée
 extends Node2D
 
 ## Ultra-Optimized Field Cursor
